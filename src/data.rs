@@ -14,7 +14,7 @@ pub struct Data {
     pub message: Option<Message>,
     pub raw: Option<Update>,
     pub update_type: HandlerType,
-    pub user_id: i64,
-    pub chat_id: i64,
-    pub query: String,
+    pub user_id: Option<i64>,
+    pub chat_id: Option<i64>,
+    pub query: Option<String>,
 }

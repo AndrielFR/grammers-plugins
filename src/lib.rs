@@ -37,46 +37,45 @@ pub async fn run(mut client: Client, plugins: Vec<Plugin>, prefixes: Vec<String>
         tokio::task::spawn(async move {
             for plugin in plugins.iter() {
                 if let Some(handler) = plugin.get_handler(&mut client, &update).await {
-                    if handler.check(&mut client, &update).await {
-                        let mut data = Data::default();
+                    let mut data = Data::default();
 
-                        match update {
-                            Update::CallbackQuery(callback_query) => {
-                                data.chat_id = callback_query.chat().id();
-                                data.user_id = callback_query.sender().id();
-                                data.query = std::str::from_utf8(callback_query.data())
+                    match update {
+                        Update::CallbackQuery(callback_query) => {
+                            data.chat_id = Some(callback_query.chat().id());
+                            data.user_id = Some(callback_query.sender().id());
+                            data.query = Some(
+                                std::str::from_utf8(callback_query.data())
                                     .unwrap()
-                                    .to_string();
-                                data.update_type = HandlerType::CallbackQuery;
-                                data.callback_query = Some(callback_query);
-                            }
-                            Update::InlineQuery(inline_query) => {
-                                data.user_id = inline_query.sender().id();
-                                data.chat_id = data.user_id;
-                                data.query = inline_query.text().to_string();
-                                data.update_type = HandlerType::InlineQuery;
-                                data.inline_query = Some(inline_query);
-                            }
-                            Update::NewMessage(message) | Update::MessageEdited(message) => {
-                                data.chat_id = message.chat().id();
-                                data.user_id = message.sender().unwrap().id();
-                                data.query = message.text().to_string();
-                                data.update_type = HandlerType::Message;
-                                data.message = Some(message);
-                            }
-                            Update::Raw(raw) => {
-                                data.update_type = HandlerType::Raw;
-                                data.raw = Some(raw);
-                            }
-                            _ => {}
+                                    .to_string(),
+                            );
+                            data.update_type = HandlerType::CallbackQuery;
+                            data.callback_query = Some(callback_query);
                         }
-
-                        handler
-                            .run(client, data)
-                            .await
-                            .expect("handler failed to run");
-                        break;
+                        Update::InlineQuery(inline_query) => {
+                            data.user_id = Some(inline_query.sender().id());
+                            data.query = Some(inline_query.text().to_string());
+                            data.update_type = HandlerType::InlineQuery;
+                            data.inline_query = Some(inline_query);
+                        }
+                        Update::NewMessage(message) | Update::MessageEdited(message) => {
+                            data.chat_id = Some(message.chat().id());
+                            data.user_id = Some(message.sender().unwrap().id());
+                            data.query = Some(message.text().to_string());
+                            data.update_type = HandlerType::Message;
+                            data.message = Some(message);
+                        }
+                        Update::Raw(raw) => {
+                            data.update_type = HandlerType::Raw;
+                            data.raw = Some(raw);
+                        }
+                        _ => {}
                     }
+
+                    handler
+                        .run(client, data)
+                        .await
+                        .expect("handler failed to run");
+                    break;
                 }
             }
         });
