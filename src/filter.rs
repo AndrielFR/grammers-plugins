@@ -59,7 +59,9 @@ impl Filter {
             Self::Chat(chat_id) => {
                 let current_id = match update {
                     Update::CallbackQuery(ref callback) => callback.chat().id(),
-                    Update::NewMessage(ref message) | Update::MessageEdited(ref message) => message.chat().id(),
+                    Update::NewMessage(ref message) | Update::MessageEdited(ref message) => {
+                        message.chat().id()
+                    }
                     _ => 0,
                 };
 
@@ -82,7 +84,7 @@ impl Filter {
             Self::Deleted => match update {
                 Update::MessageDeleted(_) => true,
                 _ => false,
-            }
+            },
             Self::Document => match update {
                 Update::NewMessage(message) | Update::MessageEdited(message) => {
                     if let Some(media) = message.media() {
@@ -100,13 +102,15 @@ impl Filter {
             Self::Edited => match update {
                 Update::MessageEdited(_) => true,
                 _ => false,
-            }
+            },
             Self::Forward => match update {
                 Update::NewMessage(ref message) => message.forward_header().is_some(),
                 _ => false,
             },
             Self::Media => match update {
-                Update::NewMessage(ref message) | Update::MessageEdited(ref message) => message.media().is_some(),
+                Update::NewMessage(ref message) | Update::MessageEdited(ref message) => {
+                    message.media().is_some()
+                }
                 _ => false,
             },
             Self::Mentioned => match update {
@@ -134,7 +138,7 @@ impl Filter {
             Self::Raw => match update {
                 Update::Raw(_) => true,
                 _ => false,
-            }
+            },
             Self::Reply => match update {
                 Update::NewMessage(ref message) => message.reply_header().is_some(),
                 _ => false,
@@ -145,7 +149,9 @@ impl Filter {
                         std::str::from_utf8(callback.data()).unwrap()
                     }
                     Update::InlineQuery(ref inline) => inline.text(),
-                    Update::NewMessage(ref message) | Update::MessageEdited(ref message) => message.text(),
+                    Update::NewMessage(ref message) | Update::MessageEdited(ref message) => {
+                        message.text()
+                    }
                     _ => "",
                 };
 
@@ -153,7 +159,9 @@ impl Filter {
                 re.is_match(query)
             }
             Self::Text(text) => match update {
-                Update::NewMessage(message) | Update::MessageEdited(message) => message.text() == text,
+                Update::NewMessage(message) | Update::MessageEdited(message) => {
+                    message.text() == text
+                }
                 _ => false,
             },
             Self::Sticker => match update {

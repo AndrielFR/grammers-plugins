@@ -25,7 +25,11 @@ impl Plugin {
         self.handlers.push(handler)
     }
 
-    pub(crate) async fn get_handler(&self, client: &mut Client, update: &Update) -> Option<&Handler> {
+    pub(crate) async fn get_handler(
+        &self,
+        client: &mut Client,
+        update: &Update,
+    ) -> Option<&Handler> {
         for handler in self.handlers.iter() {
             if handler.check(client, update).await {
                 return Some(handler);

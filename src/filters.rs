@@ -3,9 +3,9 @@
 
 pub use super::Filter::All as all;
 pub use super::Filter::Contact as contact;
-pub use super::Filter::Edited as edited;
 pub use super::Filter::Deleted as deleted;
 pub use super::Filter::Document as document;
+pub use super::Filter::Edited as edited;
 pub use super::Filter::Forward as forward;
 pub use super::Filter::Media as media;
 pub use super::Filter::Mentioned as mentioned;
@@ -33,10 +33,7 @@ pub fn command(pattern: &'static str) -> super::Filter {
     }
 
     expr.push_str(format!("(?:@{})?", super::username()).as_str());
-    expr.insert_str(
-        0,
-        format!("^[{}]", super::prefixes().join("")).as_str(),
-    );
+    expr.insert_str(0, format!("^[{}]", super::prefixes().join("")).as_str());
 
     if has_final_line_symbol {
         expr.push('$');

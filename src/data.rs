@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 // Copyright (c) 2022 AndrielFR <https://github.com/AndrielFR>
 
-use grammers_client::types::{Message, CallbackQuery, InlineQuery};
+use grammers_client::types::{CallbackQuery, InlineQuery, Message};
 use grammers_tl_types::enums::Update;
 
 use super::HandlerType;

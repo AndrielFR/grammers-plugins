@@ -9,8 +9,7 @@ use async_recursion::async_recursion;
 
 use super::{Data, Filter, Result};
 
-pub type AsyncFunction =
-    fn(Client, Data) -> Pin<Box<dyn Future<Output = Result> + Send + 'static>>;
+pub type AsyncFunction = fn(Client, Data) -> Pin<Box<dyn Future<Output = Result> + Send + 'static>>;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum HandlerType {
@@ -68,7 +67,7 @@ impl Handler {
             }
             _ => {
                 result = false;
-            },
+            }
         }
 
         if !result {
@@ -86,7 +85,8 @@ impl Handler {
 
                 if let Some(other) = &self.other {
                     match **other {
-                        OtherHandler::And(ref handler) => match handler.check(client, update).await {
+                        OtherHandler::And(ref handler) => match handler.check(client, update).await
+                        {
                             true => return true,
                             false => {
                                 result = false;
