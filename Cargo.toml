@@ -12,8 +12,6 @@ edition = "2021"
 [dependencies]
 grammers-client = { git = "https://github.com/Lonami/grammers", rev = "a21d385" }
 grammers-tl-types = { git = "https://github.com/Lonami/grammers", rev = "a21d385" }
-grammers-macros = { path = "../grammers-macros" }
-# grammers-macros = { git = "https://github.com/AndrielFR/grammers-macros" }
 tokio = { version = "1.5.0", features = ["macros", "rt", "rt-multi-thread", "signal", "sync"] }
 regex = "1.5.6"
 once_cell = "1.12.0"
